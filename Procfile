@@ -1,1 +1,1 @@
-web: bin/boot
+web: yarn --cwd packages/admin start
