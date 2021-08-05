@@ -11,8 +11,7 @@
   },
   "scripts": {
     "postinstall": "./postinstall.sh",
-    "build:api": "yarn workspace api build",
-    "build:admin": "yarn workspace admin build",
+    "build": "yarn workspace admin build",
     "start" : "yarn --cwd packages/admin start"
   }
 }
