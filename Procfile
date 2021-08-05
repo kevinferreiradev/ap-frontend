@@ -1,1 +1,1 @@
-web: yarn --cwd packages/admin start
+web: node server.js
