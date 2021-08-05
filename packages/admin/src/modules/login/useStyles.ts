@@ -7,11 +7,11 @@ export const useStyles = makeStyles({
     width: '100%',
   },
   logo: {
-    width: 'fit-content',
     marginBottom: '30px',
+    height: 100,
   },
   cardLogin: {
-    width: '20vw',
+    width: '300px',
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',

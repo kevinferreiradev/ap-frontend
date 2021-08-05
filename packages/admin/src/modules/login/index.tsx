@@ -17,13 +17,8 @@ interface IProps {
 
 export const Login: React.FC<IProps> = props => {
   const classes = useStyles();
-  const {
-    userData,
-    onChangeField,
-    doLogin,
-    loginError,
-    loginStarted,
-  } = useLogin();
+  const { userData, onChangeField, doLogin, loginError, loginStarted } =
+    useLogin();
 
   return (
     <Box
