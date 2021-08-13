@@ -12,16 +12,20 @@ export const DomainForm = (props: any) => {
       <Box className={classes.fields}>
         <TextInput
           fullWidth
-          source="code"
+          source="codigo"
           options={{ label: 'Código' }}
           className={classes.input}
         />
-      </Box>
-      <Box className={classes.fields}>
+        <TextInput
+          fullWidth
+          options={{ label: 'Nome' }}
+          source="nome"
+          className={classes.input}
+        />
         <TextInput
           fullWidth
           options={{ label: 'Descrição' }}
-          source="description"
+          source="descricao"
           className={classes.input}
         />
       </Box>

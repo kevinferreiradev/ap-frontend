@@ -12,8 +12,8 @@ import { validate as uuidValidate } from 'uuid';
 const httpClient = fetchUtils.fetchJson;
 
 const getMessage = (error: any) => {
-  return "random message";
-
+  console.error(error);
+  //return "random message";
 
   const message =
     error.response && error.response.data && error.response.data.message;
@@ -59,175 +59,66 @@ const composeFilter = (paramsFilter: any): QueryFilter[] => {
   });
 };
 
-const USER_MOCK = [{
-  "id": 1,
-  "email": "User2@email.com",
-  "username": "User 1",
-  "firstName": "User 1",
-  "lastName": "User 1",
-  
-},{
-  "id": 2,
-  "email": "User2@email.com",
-  "username": "User2",
-  "firstName": "User 2",
-  "lastName": "User 2",
-  
-}];
-
-const CATEGORY_MOCK = [{
-  "id": 1,
-  "image": "image.png",
-  "code": "CAT_101",
-  "description": "Eletronico"
-},{
-  "id": 2,
-  "image": "image.png",
-  "code": "CAT_102",
-  "description": "Animal",
-}];
-
-const STATUS_MOCK = [{
-  "id": 1,
-  "code": "STS_100",
-  "description": "Achado"
-},{
-  "id": 2,
-  "code": "STS_101",
-  "description": "Perdido",
-  }];
-
-
-const CITIES_MOCK = [{
-  "id": 1,
-  "code": "STS_100",
-  "description": "João Pessoa"
-},{
-  "id": 2,
-  "code": "STS_101",
-  "description": "Campina Grande",
-}];
-
-
-const PARTNERS_MOCK = [{
-  "id": 1,
-  "code": "STS_100",
-  "description": "Manaira Shopping"
-},{
-  "id": 2,
-  "code": "STS_101",
-  "description": "Mangabeira Shopping",
-}];
-
-
 export const dataProvider: DataProvider = {
-  getList: (
-    resource,
-    //params
-  ) =>
-    new Promise((
-      resolve
-      //, reject
-    ) => {
-      
-      let data: any[];
-      
-      console.log('STEP resource ', resource);
-      if (resource === "user")
-        data = USER_MOCK;
-      
-      if (resource === "category")
-        data = CATEGORY_MOCK;
-      
-      if (resource === "status")
-        data = STATUS_MOCK;
-      
-      if (resource === "cities")
-        data = CITIES_MOCK;
-      
-      if (resource === "partners")
-        data = PARTNERS_MOCK;
-
-        
-      
-      
-      //const newResource = resource === 'users' ? 'user' : resource;
-      //console.log('STEP USER_MOCK', USER_MOCK);
-      return new Promise(() =>
-        resolve({
-          data: data,
-          total: 2
+  getList: (resource, params) =>
+    new Promise((resolve, reject) => {
+      const { page, perPage } = params.pagination;
+      const query = RequestQueryBuilder.create({
+        filter: composeFilter(params.filter),
+      })
+        .setLimit(perPage)
+        .setPage(page)
+        .sortBy(params.sort as QuerySort)
+        .setOffset((page - 1) * perPage)
+        .query();
+      const url = `${resource}?${query}`;
+      return axiosInstance
+        .get(url)
+        .then((response: any) => {
+          console.log('STEP response', response.data);
+          return resolve({
+            data: response.data,
+            total: response.data.length,
+            // data: response.data.data,
+            // total: response.data.total,
+          });
         })
-      )
-    
+        .catch(error => {
+          const message = getMessage(error);
 
-      // const newResource = resource === 'users' ? 'user' : resource;
-      // const { page, perPage } = params.pagination;
-      // const query = RequestQueryBuilder.create({
-      //   filter: composeFilter(params.filter),
-      // })
-      //   .setLimit(perPage)
-      //   .setPage(page)
-      //   .sortBy(params.sort as QuerySort)
-      //   .setOffset((page - 1) * perPage)
-      //   .query();
-      // const url = `${newResource}?${query}`;
-      // return axiosInstance
-      //   .get(url)
-      //   .then(response =>
-      //     resolve({
-      //       data: response.data.data,
-      //       total: response.data.total,
-      //     }),
-      //   )
-      //   .catch(error => {
-      //     const message = getMessage(error);
-
-      //     error.message = message;
-      //     return reject(error);
-      //   });
-  }),
+          error.message = message;
+          return reject(error);
+        });
+    }),
   getOne: (resource, params) =>
     axiosInstance.get(`/${resource}/${params.id}`).then(response => ({
       data: response.data,
     })),
-  getMany: (
-  //  resource, params
-  ) =>
-    new Promise((
-    //  resolve, reject
-    ) => {
-      return new Promise((resolve) =>
-        resolve({
-          data: USER_MOCK,
-          total: 1
+  getMany: (resource, params) =>
+    new Promise((resolve, reject) => {
+      const query = RequestQueryBuilder.create()
+        .setFilter({
+          field: 'id',
+          operator: CondOperator.IN,
+          value: `${params.ids}`,
         })
-      )
+        .query();
+      const url = `${resource}?${query}`;
+
+      return axiosInstance
+        .get(url)
+        .then((response: any) =>
+          resolve({
+            data: response.data,
+          }),
+        )
+        .catch(error => {
+          const message = getMessage(error);
+
+          error.message = message;
+          return reject(error);
+        });
     }),
-    // new Promise((resolve, reject) => {
-    //   const query = RequestQueryBuilder.create()
-    //     .setFilter({
-    //       field: 'id',
-    //       operator: CondOperator.IN,
-    //       value: `${params.ids}`,
-    //     })
-    //     .query();
-    //   const url = `${resource}?${query}`;
-
-    //   return axiosInstance
-    //     .get(url)
-    //     .then(response =>
-    //       resolve({
-    //         data: response.data.data,
-    //       }),
-    //     )
-    //     .catch(error => {
-    //       const message = getMessage(error);
-
-    //       error.message = message;
-    //       return reject(error);
-    //     });
-    // }),
   getManyReference: (resource, params) =>
     new Promise((resolve, reject) => {
       const { page, perPage } = params.pagination;
@@ -267,7 +158,7 @@ export const dataProvider: DataProvider = {
   update: (resource, params) =>
     new Promise((resolve, reject) =>
       axiosInstance
-        .patch(`${resource}/${params.id}`, params.data)
+        .put(`${resource}/${params.id}`, params.data)
         .then(response =>
           resolve({
             data: response.data,

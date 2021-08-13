@@ -6,6 +6,7 @@ import CategoryModule from 'modules/categories';
 import StatusModule from 'modules/status';
 import PartnersModule from 'modules/partners';
 import CitiesModule from 'modules/cities';
+import ItemsModule from 'modules/items';
 import CustomLayout from 'customizations/CustomLayout';
 import Login from 'modules/login';
 import dataProvider from 'providers/dataProvider';
@@ -23,7 +24,7 @@ const App: React.FC = () => (
     <Resource {...StatusModule} />
     <Resource {...PartnersModule} />
     <Resource {...CitiesModule} />
-    
+    <Resource {...ItemsModule} />
   </Admin>
 );
 

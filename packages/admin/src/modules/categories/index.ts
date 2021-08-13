@@ -6,6 +6,6 @@ export default {
   edit: CategoryEdit,
   list: CategoryList,
   icon: PersonIcon,
-  name: 'category',
-  options: { label:"Categorias" }
+  name: 'categorias',
+  options: { label: 'Categorias' },
 };

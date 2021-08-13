@@ -1,17 +1,12 @@
 import * as React from 'react';
-import {
-  List,
-  EditButton,
-  Filter,
-  TextInput,
-  TextField,
-} from 'react-admin';
+import { List, EditButton, Filter, TextInput, TextField } from 'react-admin';
 import Datagrid from 'components/Datagrid';
 
 const CategoryFilter = (props: any) => (
   <Filter {...props}>
-    <TextInput label="Codigo" source="code" />
-    <TextInput label="Descrição" source="description" />
+    <TextInput label="Codigo" source="codigo" />
+    <TextInput label="Nome" source="nome" />
+    <TextInput label="Descrição" source="descricao" />
   </Filter>
 );
 
@@ -23,8 +18,9 @@ export const CategoryList = (props: any) => {
       bulkActionButtons={<React.Fragment />}
     >
       <Datagrid rowClick="edit">
-        <TextField source="code" label="Codigo" />
-        <TextField source="description" label="Descrição" />
+        <TextField source="codigo" label="Codigo" />
+        <TextField source="nome" label="Nome" />
+        <TextField source="descricao" label="Descrição" />
         <EditButton />
       </Datagrid>
     </List>

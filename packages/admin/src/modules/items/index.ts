@@ -10,6 +10,6 @@ export default {
   edit: DomainEdit,
   list: DomainList,
   icon: PersonIcon,
-  name: 'parceiros',
-  options: { label: 'Parceiros' },
+  name: 'items',
+  options: { label: 'Items' },
 };
